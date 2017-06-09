@@ -9,10 +9,14 @@ from pytz import timezone
 
 def load_attempts() -> dict:
     api_url = "https://devman.org/api/challenges/solution_attempts"
-    pages = requests.get(api_url).json()["number_of_pages"]
-    for page in range(1, pages + 1):
-        user_data = requests.get(api_url, params={"page": page}).json()
-        yield from user_data["records"]
+    _pages = 1
+    pages = 1
+    while _pages <= pages:
+        response = requests.get(api_url, params={"page": _pages}).json()
+        pages = response["number_of_pages"]
+        _pages += 1
+        for record in response["records"]:
+            yield record
 
 
 def is_after_midnignt(timestamp: str,
@@ -24,7 +28,7 @@ def is_after_midnignt(timestamp: str,
         attempt_time = datetime.fromtimestamp(
                             attempt_timestamp, timezone(usr_timezone)).time()
 
-        return time(0, 0) < attempt_time < time(night_shift, 0)
+        return time(0) < attempt_time < time(night_shift)
 
 
 def get_midnighters(night_shift: int) -> list:
