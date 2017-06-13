@@ -9,12 +9,12 @@ from pytz import timezone
 
 def load_attempts() -> dict:
     api_url = "https://devman.org/api/challenges/solution_attempts"
-    _pages = 1
+    current_page = 1
     pages = 1
-    while _pages <= pages:
-        response = requests.get(api_url, params={"page": _pages}).json()
+    while current_page <= pages:
+        response = requests.get(api_url, params={"page": current_page}).json()
         pages = response["number_of_pages"]
-        _pages += 1
+        current_page += 1
         for record in response["records"]:
             yield record
 
