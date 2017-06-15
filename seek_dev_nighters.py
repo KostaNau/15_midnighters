@@ -27,8 +27,7 @@ def is_after_midnignt(timestamp: str,
     if attempt_timestamp:
         attempt_time = datetime.fromtimestamp(
                             attempt_timestamp, timezone(usr_timezone)).time()
-
-        return time(0) < attempt_time < time(night_shift)
+        return 0 < attempt_time.hour < night_shift
 
 
 def get_midnighters(night_shift: int) -> list:
